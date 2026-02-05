@@ -8,9 +8,6 @@ from requests.exceptions import ConnectionError, Timeout
 from urllib3.exceptions import ProtocolError
 from datetime import datetime, timedelta
 
-#width='stretch'
-#use_container_width=True
-
 # Configuração
 st.set_page_config(layout="wide", initial_sidebar_state="collapsed", page_title="PMJA - Dashboard")
 
@@ -26,9 +23,11 @@ if tempo_decorrido >= 120:
     st.session_state.inicio_exibicao = time.time()
     st.switch_page("pages/exp.py")
 
-# CSS OTIMIZADO - Reduzido padding e margens
+# CSS OTIMIZADO - Reduzido padding e margens + Removido scroll dos gráficos
 st.markdown("""
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Poppins:wght@600;700;800;900&display=swap');
+        
         html, body, [data-testid="stAppViewContainer"], [data-testid="stApp"] {
             height: 100vh !important; width: 100vw !important; margin: 0 !important;
             padding: 0 !important; overflow: hidden !important;
@@ -40,20 +39,46 @@ st.markdown("""
             height: calc(100vh - 0.4rem) !important; 
             overflow-y: hidden !important; 
         }
-        header, #MainMenu, footer { visibility: hidden !important; height: 0 !important; display: none !important; }
-        .element-container, [data-testid="column"] { margin: 0 !important; padding: 0 0.1rem!important; }
+        header, #MainMenu, footer { 
+            visibility: hidden !important; 
+            height: 0 !important; 
+            display: none !important; 
+        }
+        .element-container, [data-testid="column"] { 
+            margin: 0 !important; 
+            padding: 0 0.1rem !important; 
+        }
         .stPlotlyChart { 
             height: 100% !important; 
             width: 100% !important; 
             background: white;
             border-radius: 0 0 8px 8px; 
             box-shadow: 0 2px 8px rgba(0, 58, 112, 0.06); 
-            padding: 0.1rem; 
+            padding: 0.1rem;
+            overflow: hidden !important;
         }
-        div[data-testid="stVerticalBlock"] > div { gap: 0.2rem !important; }
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #f1f3f6; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb { background: linear-gradient(135deg, #003a70 0%, #0056A3 100%); border-radius: 10px; }
+        /* Remover scroll dos gráficos Plotly */
+        .js-plotly-plot, .plotly, .plot-container {
+            overflow: hidden !important;
+        }
+        .svg-container {
+            overflow: visible !important;
+        }
+        div[data-testid="stVerticalBlock"] > div { 
+            gap: 0.2rem !important; 
+        }
+        ::-webkit-scrollbar { 
+            width: 6px; 
+            height: 6px; 
+        }
+        ::-webkit-scrollbar-track { 
+            background: #f1f3f6; 
+            border-radius: 10px; 
+        }
+        ::-webkit-scrollbar-thumb { 
+            background: linear-gradient(135deg, #003a70 0%, #0056A3 100%); 
+            border-radius: 10px; 
+        }
         .header-container { 
             background: linear-gradient(135deg, #003a70 0%, #0056A3 100%);
             border-radius: 8px; 
@@ -70,7 +95,10 @@ st.markdown("""
             transition: all 0.3s ease; 
             min-height: 55px; 
         }
-        .metric-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0, 58, 112, 0.12); }
+        .metric-card:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 4px 12px rgba(0, 58, 112, 0.12); 
+        }
         .metric-label { 
             font-family: 'Inter', sans-serif; 
             font-size: 11px; 
@@ -87,7 +115,6 @@ st.markdown("""
             line-height: 1; 
         }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&family=Inter:wght@700&display=swap" rel="stylesheet">
 """, unsafe_allow_html=True)
 
 # Header COMPACTO
@@ -496,8 +523,12 @@ if df_recebimento is not None and not df_recebimento.empty:
                           rangemode='tozero'),
                 hoverlabel=dict(bgcolor="white", font_size=11, font_family="Inter", bordercolor="#e0e0e0")
             )
-            grafico_placeholder.plotly_chart(fig, width='stretch', 
-                                            key=f"chart_l1_{coluna}_{mes_atual}", config={'displayModeBar': False})
+            grafico_placeholder.plotly_chart(
+                fig, 
+                width='stretch', 
+                key=f"chart_l1_{coluna}_{mes_atual}", 
+                config={'displayModeBar': False, 'scrollZoom': False}
+            )
         
         # Atualizar GRÁFICOS LINHA 2 - ALTURA 240px
         for item in placeholders_linha2:
@@ -541,8 +572,12 @@ if df_recebimento is not None and not df_recebimento.empty:
                           rangemode='tozero'),
                 hoverlabel=dict(bgcolor="white", font_size=11, font_family="Inter", bordercolor="#e0e0e0")
             )
-            grafico_placeholder.plotly_chart(fig, width='stretch', 
-                                            key=f"chart_l2_{coluna}_{mes_atual}", config={'displayModeBar': False})
+            grafico_placeholder.plotly_chart(
+                fig, 
+                width='stretch', 
+                key=f"chart_l2_{coluna}_{mes_atual}", 
+                config={'displayModeBar': False, 'scrollZoom': False}
+            )
         
         # Atualizar GRÁFICOS LINHA 3 - ALTURA 260px
         if placeholders_linha3 and mes_atual <= mes_maximo_rec:
@@ -586,14 +621,12 @@ if df_recebimento is not None and not df_recebimento.empty:
                         labels=labels_com_info,
                         values=valores_pizza,
                         marker=dict(colors=cores_pizza, line=dict(color='white', width=2)),
-                        #textinfo='percent',
-                        #textfont=dict(size=10, family='Inter', weight=700, color='white'),
                         hovertemplate='<b>%{label}</b><br>Volumes: %{value:,.0f}<br>Percentual: %{percent}<extra></extra>',
                         hole=0.3
                     ))
                     
                     fig.update_layout(
-                        template='plotly_white', height=240,
+                        template='plotly_white', height=260,
                         font=dict(family='Inter', size=9, weight=700),
                         showlegend=True,
                         legend=dict(
@@ -607,8 +640,12 @@ if df_recebimento is not None and not df_recebimento.empty:
                         margin=dict(l=20, r=150, t=10, b=10),
                         hoverlabel=dict(bgcolor="white", font_size=11, font_family="Inter", bordercolor="#e0e0e0")
                     )
-                    grafico_placeholder.plotly_chart(fig, width='stretch',
-                                                    key=f"chart_l3_pizza_{mes_atual}", config={'displayModeBar': False})
+                    grafico_placeholder.plotly_chart(
+                        fig, 
+                        width='stretch',
+                        key=f"chart_l3_pizza_{mes_atual}", 
+                        config={'displayModeBar': False, 'scrollZoom': False}
+                    )
                 
                 # GRÁFICO 2: BARRAS HORIZONTAL (Unidades de Itens)
                 elif idx_grafico == 1:
@@ -638,7 +675,7 @@ if df_recebimento is not None and not df_recebimento.empty:
                         marker=dict(
                             color=cores_barras, 
                             line=dict(color='white', width=1.5),
-                            cornerradius=8  # Border radius nas barras horizontais
+                            cornerradius=8
                         ),
                         text=[f"{int(v):,}".replace(',', '.') if v > 0 else "" for v in valores_barras],
                         textposition='outside',
@@ -661,7 +698,7 @@ if df_recebimento is not None and not df_recebimento.empty:
                             showgrid=True, 
                             gridwidth=1, 
                             gridcolor='rgba(200, 200, 200, 0.2)',
-                            range=[0, max_valor * 1.15]  # Adiciona 15% de espaço à direita para os valores
+                            range=[0, max_valor * 1.15]
                         ),
                         yaxis=dict(
                             tickfont=dict(size=9, family='Inter', weight=700),
@@ -679,8 +716,9 @@ if df_recebimento is not None and not df_recebimento.empty:
                         fig, 
                         width='stretch',
                         key=f"chart_l3_barras_h_{mes_atual}", 
-                        config={'displayModeBar': False}
+                        config={'displayModeBar': False, 'scrollZoom': False}
                     ) 
+                
                 # GRÁFICO 3: BARRAS VERTICAL (Itens por Unidade)
                 elif idx_grafico == 2:
                     valores_barras = []
@@ -708,10 +746,10 @@ if df_recebimento is not None and not df_recebimento.empty:
                         marker=dict(
                             color=cores_barras, 
                             line=dict(color='white', width=1.5),
-                            cornerradius=8  # Border radius nas barras
+                            cornerradius=8
                         ),
                         text=[f"{int(v):,}".replace(',', '.') if v > 0 else "" for v in valores_barras],
-                        textposition='outside',  # Valores acima das barras
+                        textposition='outside',
                         textfont=dict(size=10, family='Inter', weight=700, color='#1a1a1a'),
                         hovertemplate='<b>%{x}</b><br>Itens: %{y:,.0f}<extra></extra>'
                     ))
@@ -724,7 +762,7 @@ if df_recebimento is not None and not df_recebimento.empty:
                         height=260,
                         font=dict(family='Inter', size=9, weight=700),
                         showlegend=False,
-                        margin=dict(l=20, r=20, t=40, b=100),  # Aumentei margem superior para os valores
+                        margin=dict(l=20, r=20, t=40, b=100),
                         plot_bgcolor='rgba(248, 249, 250, 0.5)',
                         xaxis=dict(
                             tickfont=dict(size=8, family='Inter', weight=700),
@@ -736,7 +774,7 @@ if df_recebimento is not None and not df_recebimento.empty:
                             showgrid=True, 
                             gridwidth=1, 
                             gridcolor='rgba(200, 200, 200, 0.2)',
-                            range=[0, max_valor * 1.15]  # Adiciona 15% de espaço acima para os valores
+                            range=[0, max_valor * 1.15]
                         ),
                         hoverlabel=dict(
                             bgcolor="white", 
@@ -750,8 +788,9 @@ if df_recebimento is not None and not df_recebimento.empty:
                         fig, 
                         width='stretch',
                         key=f"chart_l3_barras_v_{mes_atual}", 
-                        config={'displayModeBar': False}
+                        config={'displayModeBar': False, 'scrollZoom': False}
                     )
+        
         time.sleep(0.9)
     
 elif df_recebimento is None:

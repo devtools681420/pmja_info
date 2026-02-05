@@ -8,9 +8,6 @@ from requests.exceptions import ConnectionError, Timeout
 from urllib3.exceptions import ProtocolError
 from datetime import datetime, timedelta
 
-#width='stretch'
-#use_container_width=True
-
 # Configuração
 st.set_page_config(layout="wide", initial_sidebar_state="collapsed", page_title="PMJA - Dashboard Expedição")
 
@@ -26,7 +23,7 @@ if tempo_decorrido >= 120:
     st.session_state.inicio_exibicao = time.time()
     st.switch_page("pages/rec.py")
 
-# CSS com fontes compatíveis
+# CSS com fontes compatíveis e sem scroll nos gráficos
 st.markdown("""
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Poppins:wght@600;700;800;900&display=swap');
@@ -36,26 +33,87 @@ st.markdown("""
             padding: 0 !important; overflow: hidden !important;
             background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%);
         }
-        .block-container { padding: 0.2rem 0.5rem !important; max-width: 100% !important;
-            height: calc(100vh - 0.4rem) !important; overflow-y: auto !important; }
-        header, #MainMenu, footer { visibility: hidden !important; height: 0 !important; display: none !important; }
-        .element-container, [data-testid="column"] { margin: 0 !important; padding: 0 0.2rem !important; }
-        .stPlotlyChart { height: 100% !important; width: 100% !important; background: white;
-            border-radius: 0 0 8px 8px; box-shadow: 0 2px 8px rgba(0, 58, 112, 0.06); padding: 0.1rem; }
-        div[data-testid="stVerticalBlock"] > div { gap: 0.2rem !important; }
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f3f6; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb { background: linear-gradient(135deg, #003a70 0%, #0056A3 100%); border-radius: 10px; }
-        .header-container { background: linear-gradient(135deg, #003a70 0%, #0056A3 100%);
-            border-radius: 10px; box-shadow: 0 4px 15px rgba(0, 58, 112, 0.12);
-            padding: 0.2rem 1rem; margin-bottom: 0.8rem; }
-        .metric-card { background: white; border-radius: 8px; padding: 0.8rem;
-            box-shadow: 0 2px 8px rgba(0, 58, 112, 0.06); border-left: 3px solid;
-            transition: all 0.3s ease; min-height: 80px; }
-        .metric-card:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0, 58, 112, 0.12); }
-        .metric-label { font-family: 'Inter', sans-serif; font-size: 14px; color: #666;
-            font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.15rem; }
-        .metric-value { font-family: 'Poppins', sans-serif; font-size: 24px; font-weight: 800; line-height: 1; }
+        .block-container { 
+            padding: 0.2rem 0.5rem !important; 
+            max-width: 100% !important;
+            height: calc(100vh - 0.4rem) !important; 
+            overflow-y: auto !important; 
+        }
+        header, #MainMenu, footer { 
+            visibility: hidden !important; 
+            height: 0 !important; 
+            display: none !important; 
+        }
+        .element-container, [data-testid="column"] { 
+            margin: 0 !important; 
+            padding: 0 0.2rem !important; 
+        }
+        .stPlotlyChart { 
+            height: 100% !important; 
+            width: 100% !important; 
+            background: white;
+            border-radius: 0 0 8px 8px; 
+            box-shadow: 0 2px 8px rgba(0, 58, 112, 0.06); 
+            padding: 0.1rem;
+            overflow: hidden !important;
+        }
+        /* Remover scroll dos gráficos Plotly */
+        .js-plotly-plot, .plotly, .plot-container {
+            overflow: hidden !important;
+        }
+        .svg-container {
+            overflow: visible !important;
+        }
+        div[data-testid="stVerticalBlock"] > div { 
+            gap: 0.2rem !important; 
+        }
+        ::-webkit-scrollbar { 
+            width: 8px; 
+            height: 8px; 
+        }
+        ::-webkit-scrollbar-track { 
+            background: #f1f3f6; 
+            border-radius: 10px; 
+        }
+        ::-webkit-scrollbar-thumb { 
+            background: linear-gradient(135deg, #003a70 0%, #0056A3 100%); 
+            border-radius: 10px; 
+        }
+        .header-container { 
+            background: linear-gradient(135deg, #003a70 0%, #0056A3 100%);
+            border-radius: 10px; 
+            box-shadow: 0 4px 15px rgba(0, 58, 112, 0.12);
+            padding: 0.2rem 1rem; 
+            margin-bottom: 0.8rem; 
+        }
+        .metric-card { 
+            background: white; 
+            border-radius: 8px; 
+            padding: 0.8rem;
+            box-shadow: 0 2px 8px rgba(0, 58, 112, 0.06); 
+            border-left: 3px solid;
+            transition: all 0.3s ease; 
+            min-height: 80px; 
+        }
+        .metric-card:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 4px 15px rgba(0, 58, 112, 0.12); 
+        }
+        .metric-label { 
+            font-family: 'Inter', sans-serif; 
+            font-size: 14px; 
+            color: #666;
+            font-weight: 700; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+            margin-bottom: 0.15rem; 
+        }
+        .metric-value { 
+            font-family: 'Poppins', sans-serif; 
+            font-size: 24px; 
+            font-weight: 800; 
+            line-height: 1; 
+        }
     </style>
 """, unsafe_allow_html=True)
 
@@ -534,9 +592,12 @@ if df_expedicao is not None and not df_expedicao.empty:
                         hoverlabel=dict(bgcolor="white", font_size=12, font_family="Inter, sans-serif")
                     )
                 
-                grafico_placeholder.plotly_chart(fig, width='stretch', 
-                                                key=f"chart_{coluna}_{mes_atual}", 
-                                                config={'displayModeBar': False})
+                grafico_placeholder.plotly_chart(
+                    fig, 
+                    key=f"chart_{coluna}_{mes_atual}", 
+                    config={'displayModeBar': False, 'scrollZoom': False},
+                    width='stretch'
+                )
         
         # ========== ATUALIZAR GRÁFICOS INFERIORES (3 gráficos por sistema) ==========
         for item in placeholders_inferiores:
@@ -582,19 +643,25 @@ if df_expedicao is not None and not df_expedicao.empty:
                 
                 # GRÁFICO DONUT
                 if tipo_grafico_barras == 'donut':
-                    labels_legenda = []
-                    for cat, val, p in zip(categorias, valores, percentuais):
-                        labels_legenda.append(f"{cat}: {int(val):,} ({p:.1f}%)".replace(',', '.'))
+                    # Criar labels da legenda com nome: valor (%)
+                    labels_legenda = [f"{cat}: {int(val):,} ({p:.1f}%)".replace(',', '.') 
+                                     for cat, val, p in zip(categorias, valores, percentuais)]
+                    
+                    # Criar texto para aparecer nas fatias (apenas %)
+                    texto_fatias = [f"{p:.1f}%" for p in percentuais]
                     
                     fig.add_trace(go.Pie(
                         labels=labels_legenda,
                         values=valores,
-                        hole=0.3,
-                        marker=dict(colors=cores, line=dict(color='white', width=4)),
-                        textposition='none',
+                        hole=0.4,
+                        marker=dict(colors=cores, line=dict(color='white', width=3)),
+                        text=texto_fatias,
+                        textfont=dict(size=13, family='Poppins, sans-serif', weight='bold'),
+                        insidetextorientation='radial',
+                        textinfo='text',
                         hovertemplate='<b>%{label}</b><br><extra></extra>',
                         showlegend=True,
-                        pull=[0.08 if valores[i] == max(valores) else 0.02 for i in range(len(categorias))],
+                        pull=[0.03 if valores[i] == max(valores) else 0 for i in range(len(categorias))],
                         rotation=90,
                         direction='clockwise',
                         sort=False
@@ -611,9 +678,14 @@ if df_expedicao is not None and not df_expedicao.empty:
                         font=dict(family='Inter, sans-serif', size=11),
                         margin=dict(l=20, r=20, t=50, b=20),
                         legend=dict(
-                            orientation="v", yanchor="middle", y=0.5, xanchor="left", x=1.05,
-                            font=dict(size=11, family='Inter, sans-serif', color='#333'),
-                            bgcolor='rgba(255,255,255,0.9)', borderwidth=1
+                            orientation="v", 
+                            yanchor="middle", 
+                            y=0.5, 
+                            xanchor="left", 
+                            x=1.05,
+                            font=dict(size=10, family='Inter, sans-serif', color='#333'),
+                            bgcolor='rgba(255,255,255,0.9)', 
+                            borderwidth=1
                         ),
                         hoverlabel=dict(bgcolor="white", font_size=12, font_family="Inter, sans-serif")
                     )
@@ -621,7 +693,7 @@ if df_expedicao is not None and not df_expedicao.empty:
                 # GRÁFICO DE LINHA
                 elif tipo_grafico_barras == 'linha':
                     x_valores = list(range(len(categorias)))
-                    textos_visiveis = [f"<b>{int(v)}</b><br>{p:.1f}%" if v > 0 else "" for v, p in zip(valores, percentuais)]
+                    textos_visiveis = [f"<b>{int(v):,}</b><br>{p:.1f}%".replace(',', '.') if v > 0 else "" for v, p in zip(valores, percentuais)]
                     
                     fig.add_trace(go.Scatter(
                         x=x_valores, y=valores,
@@ -665,7 +737,7 @@ if df_expedicao is not None and not df_expedicao.empty:
                 
                 # GRÁFICO DE BARRAS VERTICAL
                 elif tipo_grafico_barras == 'barra_vertical':
-                    textos_customizados = [f"<b>{int(v)}</b><br>{p:.1f}%" if v > 0 else "" for v, p in zip(valores, percentuais)]
+                    textos_customizados = [f"<b>{int(v):,}</b><br>{p:.1f}%".replace(',', '.') if v > 0 else "" for v, p in zip(valores, percentuais)]
                     
                     fig.add_trace(go.Bar(
                         x=categorias, y=valores,
@@ -702,9 +774,12 @@ if df_expedicao is not None and not df_expedicao.empty:
                         bargap=0.25
                     )
                 
-                placeholder.plotly_chart(fig, width='stretch', 
-                                       key=f"grafico_inferior_{metrica}_{mes_atual}",
-                                       config={'displayModeBar': False})
+                placeholder.plotly_chart(
+                    fig, 
+                    key=f"grafico_inferior_{metrica}_{mes_atual}",
+                    config={'displayModeBar': False, 'scrollZoom': False},
+                    width='stretch'
+                )
             else:
                 placeholder.markdown(f"""
                     <div style="background: white; padding: 2rem; border-radius: 12px; 
