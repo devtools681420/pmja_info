@@ -21,7 +21,7 @@ tempo_decorrido = time.time() - st.session_state.inicio_exibicao
 # Após 2 minutos (120 segundos), navegar para pallet.py
 if tempo_decorrido >= 120:
     st.session_state.inicio_exibicao = time.time()
-    st.switch_page("pages/rec.py")
+    st.switch_page("pages/full.py")
 
 # CSS com fontes compatíveis e sem scroll nos gráficos
 st.markdown("""

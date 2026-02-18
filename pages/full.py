@@ -9,8 +9,21 @@ from requests.exceptions import ConnectionError, Timeout
 from urllib3.exceptions import ProtocolError
 from datetime import datetime, timedelta
 
+#pages
 # Configuração
 st.set_page_config(layout="wide", initial_sidebar_state="collapsed", page_title="PMJA - Dashboard Completo")
+
+# Inicializar session_state para controle de navegação
+if 'inicio_exibicao' not in st.session_state:
+    st.session_state.inicio_exibicao = time.time()
+
+# Calcular tempo decorrido
+tempo_decorrido = time.time() - st.session_state.inicio_exibicao
+
+# Após 2 minutos (120 segundos), navegar para pallet.py
+if tempo_decorrido >= 120:
+    st.session_state.inicio_exibicao = time.time()
+    st.switch_page("pages/rec.py")
 
 # CSS OTIMIZADO
 st.markdown("""
