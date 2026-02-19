@@ -505,7 +505,7 @@ if df_rec is not None and df_exp is not None and mes_max_rec > 0 and mes_max_exp
                 # Adicionar anotações para os totais
                 annotations = []
                 x_pos = 0.98
-                y_start = 1.35
+                y_start = 1.25
                 
                 for i, (ano, total) in enumerate(totais_anos.items()):
                     cor_ano = cores_anos_rec[i % len(cores_anos_rec)]
@@ -523,7 +523,7 @@ if df_rec is not None and df_exp is not None and mes_max_rec > 0 and mes_max_exp
                 
                 fig.update_layout(
                     title=dict(text=f'<b>{titulo}</b>', font=dict(family='Poppins', size=11), x=0.5, xanchor='center'),
-                    template='plotly_white', height=170, showlegend=False,
+                    template='plotly_white', height=200, showlegend=False,
                     margin=dict(l=30, r=10, t=35, b=20),
                     annotations=annotations,
                     xaxis=dict(tickmode='array', tickvals=list(range(1, 13)), 
@@ -589,7 +589,7 @@ if df_rec is not None and df_exp is not None and mes_max_rec > 0 and mes_max_exp
                     
                     fig.update_layout(
                         title=dict(text='<b>Volumes por Sistema</b>', font=dict(family='Poppins', size=11), x=0.5, xanchor='center'),
-                        template='plotly_white', height=170, showlegend=True,
+                        template='plotly_white', height=200, showlegend=True,
                         legend=dict(orientation="v", y=0.5, x=1.02, font=dict(size=7)),
                         margin=dict(l=10, r=80, t=30, b=10)
                     )
@@ -627,7 +627,7 @@ if df_rec is not None and df_exp is not None and mes_max_rec > 0 and mes_max_exp
             
             annotations = []
             x_pos = 0.98
-            y_start = 1.35
+            y_start = 1.25
             
             for i, (ano, total) in enumerate(totais_anos.items()):
                 cor_ano = cores_anos_rec[i % len(cores_anos_rec)]
@@ -645,7 +645,7 @@ if df_rec is not None and df_exp is not None and mes_max_rec > 0 and mes_max_exp
             
             fig.update_layout(
                 title=dict(text='<b>Unidades Recebidas</b>', font=dict(family='Poppins', size=11), x=0.5, xanchor='center'),
-                template='plotly_white', height=170, showlegend=False,
+                template='plotly_white', height=200, showlegend=False,
                 margin=dict(l=30, r=10, t=35, b=20),
                 annotations=annotations,
                 xaxis=dict(tickmode='array', tickvals=list(range(1, 13)), 
@@ -708,7 +708,7 @@ if df_rec is not None and df_exp is not None and mes_max_rec > 0 and mes_max_exp
                     
                     fig.update_layout(
                         title=dict(text='<b>Unidades Itens por Sistema</b>', font=dict(family='Poppins', size=11), x=0.5, xanchor='center'),
-                        template='plotly_white', height=170, showlegend=False,
+                        template='plotly_white', height=200, showlegend=False,
                         margin=dict(l=80, r=40, t=30, b=20),
                         yaxis=dict(tickfont=dict(size=8))
                     )
@@ -745,7 +745,7 @@ if df_rec is not None and df_exp is not None and mes_max_rec > 0 and mes_max_exp
             
             annotations = []
             x_pos = 0.98
-            y_start = 1.35
+            y_start = 1.25
             
             for i, (ano, total) in enumerate(totais_anos.items()):
                 cor_ano = cores_anos_rec[i % len(cores_anos_rec)]
@@ -763,7 +763,7 @@ if df_rec is not None and df_exp is not None and mes_max_rec > 0 and mes_max_exp
             
             fig.update_layout(
                 title=dict(text='<b>Itens por Unidade</b>', font=dict(family='Poppins', size=11), x=0.5, xanchor='center'),
-                template='plotly_white', height=170, showlegend=False,
+                template='plotly_white', height=200, showlegend=False,
                 margin=dict(l=30, r=10, t=35, b=20),
                 annotations=annotations,
                 xaxis=dict(tickmode='array', tickvals=list(range(1, 13)), 
@@ -826,7 +826,7 @@ if df_rec is not None and df_exp is not None and mes_max_rec > 0 and mes_max_exp
                     
                     fig.update_layout(
                         title=dict(text='<b>Itens/Unidade por Sistema</b>', font=dict(family='Poppins', size=11), x=0.5, xanchor='center'),
-                        template='plotly_white', height=170, showlegend=False,
+                        template='plotly_white', height=200, showlegend=False,
                         margin=dict(l=30, r=10, t=30, b=60),
                         xaxis=dict(tickfont=dict(size=7), tickangle=-45)
                     )
@@ -870,7 +870,7 @@ if df_rec is not None and df_exp is not None and mes_max_rec > 0 and mes_max_exp
                 
                 annotations = []
                 x_pos = 0.98
-                y_start = 1.35
+                y_start =1.25
                 
                 for i, (ano, total) in enumerate(totais_anos.items()):
                     cor_ano = cores_anos_exp[i % len(cores_anos_exp)]
@@ -888,7 +888,7 @@ if df_rec is not None and df_exp is not None and mes_max_rec > 0 and mes_max_exp
                 
                 fig.update_layout(
                     title=dict(text=f'<b>{titulo}</b>', font=dict(family='Poppins', size=11), x=0.5, xanchor='center'),
-                    template='plotly_white', height=170, showlegend=False,
+                    template='plotly_white', height=200, showlegend=False,
                     margin=dict(l=30, r=10, t=35, b=20),
                     annotations=annotations,
                     xaxis=dict(tickmode='array', tickvals=list(range(1, 13)), 
@@ -960,7 +960,7 @@ if df_rec is not None and df_exp is not None and mes_max_rec > 0 and mes_max_exp
                         
                         fig.update_layout(
                             title=dict(text=f'<b>{titulo}</b>', font=dict(family='Poppins', size=11), x=0.5, xanchor='center'),
-                            template='plotly_white', height=170, showlegend=True,
+                            template='plotly_white', height=200, showlegend=True,
                             legend=dict(orientation="v", y=0.5, x=1.02, font=dict(size=7)),
                             margin=dict(l=10, r=80, t=30, b=10)
                         )
@@ -975,7 +975,7 @@ if df_rec is not None and df_exp is not None and mes_max_rec > 0 and mes_max_exp
                         
                         fig.update_layout(
                             title=dict(text=f'<b>{titulo}</b>', font=dict(family='Poppins', size=11), x=0.5, xanchor='center'),
-                            template='plotly_white', height=170, showlegend=False,
+                            template='plotly_white', height=200, showlegend=False,
                             margin=dict(l=80, r=40, t=30, b=20),
                             yaxis=dict(tickfont=dict(size=8))
                         )
@@ -990,7 +990,7 @@ if df_rec is not None and df_exp is not None and mes_max_rec > 0 and mes_max_exp
                         
                         fig.update_layout(
                             title=dict(text=f'<b>{titulo}</b>', font=dict(family='Poppins', size=11), x=0.5, xanchor='center'),
-                            template='plotly_white', height=170, showlegend=False,
+                            template='plotly_white', height=200, showlegend=False,
                             margin=dict(l=30, r=10, t=30, b=60),
                             xaxis=dict(tickfont=dict(size=7), tickangle=-45)
                         )
