@@ -133,7 +133,7 @@ st.markdown("""
                     Evolução Temporal - Expedição
                 </p>
             </div>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Logo-engie.svg/2445px-Logo-engie.svg.png" 
+            <img src="https://upload.wikimedia.org/wikipedia/commons/8/8f/Logo-engie.svg" 
                  style="height: 40px; filter: brightness(0) invert(1);" alt="Logo Engie">
         </div>
     </div>
